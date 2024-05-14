@@ -9,4 +9,13 @@ class Contact {
       this.lastName,
       required this.phoneNumber,
       this.profileImageUrl = ''});
+
+  factory Contact.fromJson(Map<String, dynamic> json) {
+    return Contact(
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      phoneNumber: json['phoneNumber'],
+      profileImageUrl: json['profileImageUrl'],
+    );
+  }
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/data/dummy_data.dart';
 import 'package:flutter_contacts/model/contact.dart';
@@ -18,28 +17,47 @@ class Contacts extends StatefulWidget {
 }
 
 class _ContactsState extends State<Contacts> {
-  final List<Contact> _contacts = contacts;
-  // Future< List<Contact>> _getContacts() async{
-  //   final url = Uri.parse('http://146.59.52.68:11235/api/User?skip=0&take=10');
-  //   final headers = {
-  //     'accept': 'text/plain',
-  //     'ApiKey': '49fbc414-78fb-4fd4-953d-be210be2a829',
-  //   };
+  List<Contact> _contacts = [];
+  bool _isLoading = true;
+  String? _errorMessage;
 
-  //    try {
-  //     final response = await http.get(url, headers: headers);
+  @override
+  void initState() {
+    super.initState();
+    _getContacts();
+  }
 
-  //     if (response.statusCode == 200) {
-  //       List<dynamic> body = jsonDecode(response.body);
-  //       List<Contact> conts = body.map((dynamic item) => Contact.fromJson(item)).toList();
-  //       return conts;
-  //     } else {
-  //       throw Exception('Failed to load contacts');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Failed to load contacts: $e');
-  //   }
-  // }
+  Future<void> _getContacts() async {
+    final url = Uri.parse('http://146.59.52.68:11235/api/User?skip=0&take=10');
+    final headers = {
+      'accept': 'text/plain',
+      'ApiKey': '8d01e921-9d07-4a3e-a0f8-5dd6d2358259',
+    };
+    try {
+      final response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> body = jsonDecode(response.body);
+        List<dynamic> users = body['data']['users'];
+        List<Contact> contacts =
+            users.map((dynamic item) => Contact.fromJson(item)).toList();
+        setState(() {
+          _contacts = contacts;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Failed to load contacts: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Failed to load contacts: $e';
+      });
+    }
+  }
 
   void _openAddNewContactOverlay() {
     showModalBottomSheet(
@@ -61,17 +79,22 @@ class _ContactsState extends State<Contacts> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = Expanded(
-      child: ListView.builder(
-        itemCount: _contacts.length,
-        itemBuilder: (context, index) => ContactItem(
-          contact: _contacts[index],
-          onSelectedContact: (contact) {
-            _selectContact(contact);
-          },
-        ),
-      ),
-    );
+    Widget content = _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _errorMessage != null
+            ? Center(child: Text(_errorMessage!))
+            : Expanded(
+                child: ListView.builder(
+                  itemCount: _contacts.length,
+                  itemBuilder: (context, index) => ContactItem(
+                    contact: _contacts[index],
+                    onSelectedContact: (contact) {
+                      _selectContact(contact);
+                    },
+                  ),
+                ),
+              );
+
     if (_contacts.isEmpty) {
       content = const NoContacts();
     }
