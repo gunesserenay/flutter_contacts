@@ -26,8 +26,9 @@ class _AddNewContactState extends State<AddNewContact> {
 
       final url = Uri.parse('http://146.59.52.68:11235/api/User');
       final headers = {
+        'accept': 'text/plain',
+        'ApiKey': '8d01e921-9d07-4a3e-a0f8-5dd6d2358259',
         'Content-Type': 'application/json',
-        'ApiKey': '49fbc414-78fb-4fd4-953d-be210be2a829',
       };
 
       final body = json.encode({
