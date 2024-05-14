@@ -33,7 +33,7 @@ class ContactItem extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
-              contact.phone,
+              contact.phoneNumber,
               style: GoogleFonts.nunito(
                   fontSize: 16,
                   color: Colors.grey,

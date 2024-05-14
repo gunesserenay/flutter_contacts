@@ -5,14 +5,22 @@ class NewContactTextField extends StatelessWidget {
     super.key,
     required this.hint,
     this.keyboardType = TextInputType.text,
+    this.maxLenght = 50,
+    this.validator,
+    required this.controller,
   });
 
   final String hint;
   final TextInputType keyboardType;
+  final double maxLenght;
+  final String? Function(String?)? validator;
+  final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       onChanged: (value) {},
+      validator: validator,
+      controller: controller,
       keyboardType: keyboardType,
       decoration: InputDecoration(
         contentPadding:

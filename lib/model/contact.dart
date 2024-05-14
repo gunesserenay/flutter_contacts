@@ -1,12 +1,12 @@
 class Contact {
   final String firstName;
   final String? lastName;
-  final String phone;
-  final String avatarUrl;
+  final String phoneNumber;
+  final String profileImageUrl;
 
   const Contact(
       {required this.firstName,
       this.lastName,
-      required this.phone,
-      this.avatarUrl = ''});
+      required this.phoneNumber,
+      this.profileImageUrl = ''});
 }

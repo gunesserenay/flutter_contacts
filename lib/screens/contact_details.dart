@@ -85,7 +85,7 @@ class ContactDetails extends StatelessWidget {
                       height: 30,
                     ),
                     Text(
-                      contact.phone,
+                      contact.phoneNumber,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
                           fontWeight: FontWeight.bold, fontSize: 16),
