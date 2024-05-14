@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_contacts/data/dummy_data.dart';
 import 'package:flutter_contacts/model/contact.dart';
 import 'package:flutter_contacts/widgets/contact_item.dart';
@@ -25,7 +24,15 @@ class Contacts extends StatelessWidget {
     return Scaffold(
       backgroundColor: (const Color.fromARGB(255, 244, 244, 244)),
       appBar: AppBar(
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: Image.asset(
+                'assets/images/add.png',
+                width: 25,
+                height: 25,
+              ))
+        ],
         backgroundColor: (const Color.fromARGB(255, 244, 244, 244)),
         centerTitle: false,
         title: Text(
