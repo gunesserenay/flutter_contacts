@@ -26,7 +26,9 @@ class _AddNewContactState extends State<AddNewContact> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       child: Text(
                         'Cancel',
                         textAlign: TextAlign.start,
@@ -54,21 +56,33 @@ class _AddNewContactState extends State<AddNewContact> {
                     ),
                   ],
                 ),
-                const Column(
+                Column(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.person,
                       size: 200,
                     ),
-                    NewContactTextField(hint: 'First name'),
-                    SizedBox(
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Add Photo',
+                        textAlign: TextAlign.start,
+                        style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const NewContactTextField(hint: 'First name'),
+                    const SizedBox(
                       height: 20,
                     ),
-                    NewContactTextField(hint: 'Last name'),
-                    SizedBox(
+                    const NewContactTextField(hint: 'Last name'),
+                    const SizedBox(
                       height: 20,
                     ),
-                    NewContactTextField(
+                    const NewContactTextField(
                       hint: 'Phone',
                       keyboardType: TextInputType.phone,
                     ),

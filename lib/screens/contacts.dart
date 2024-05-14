@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/data/dummy_data.dart';
 import 'package:flutter_contacts/model/contact.dart';
+import 'package:flutter_contacts/screens/contact_details.dart';
 import 'package:flutter_contacts/screens/new_contact.dart';
 import 'package:flutter_contacts/widgets/contact_item.dart';
 import 'package:flutter_contacts/widgets/no_contacts_widget.dart';
@@ -24,12 +25,27 @@ class _ContactsState extends State<Contacts> {
         builder: (ctx) => const AddNewContact());
   }
 
+  void _selectContact(Contact contact) {
+    showModalBottomSheet(
+        useSafeArea: true,
+        isScrollControlled: true,
+        context: context,
+        builder: (ctx) => ContactDetails(
+              contact: contact,
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget content = Expanded(
       child: ListView.builder(
         itemCount: _contacts.length,
-        itemBuilder: (context, index) => ContactItem(contact: _contacts[index]),
+        itemBuilder: (context, index) => ContactItem(
+          contact: _contacts[index],
+          onSelectedContact: (contact) {
+            _selectContact(contact);
+          },
+        ),
       ),
     );
     if (_contacts.isEmpty) {

@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/screens/new_contact.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NoContacts extends StatelessWidget {
   const NoContacts({super.key});
+
+  void _openAddNewContactOverlay(BuildContext context) {
+    showModalBottomSheet(
+        useSafeArea: true,
+        isScrollControlled: true,
+        context: context,
+        builder: (ctx) => const AddNewContact());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +30,22 @@ class NoContacts extends StatelessWidget {
           ),
           Text(
             'Contacts you’ve added will appear here.',
-            style: GoogleFonts.nunito(fontSize: 16),
+            style:
+                GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Text(
-            'Create New Contact',
-            style: GoogleFonts.nunito(
-                color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
-          )
+          TextButton(
+            onPressed: () {
+              _openAddNewContactOverlay(context);
+            },
+            child: Text(
+              'Create New Contact',
+              textAlign: TextAlign.start,
+              style: GoogleFonts.nunito(
+                  color: Colors.blue,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
         ],
       ),
     );
