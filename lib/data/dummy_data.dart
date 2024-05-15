@@ -1,6 +1,6 @@
 import 'package:flutter_contacts/model/contact.dart';
 
-const contacts = [
+final contacts = [
   Contact(
       id: '1',
       firstName: 'Alice',

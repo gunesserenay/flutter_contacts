@@ -5,7 +5,7 @@ class Contact {
   final String phoneNumber;
   final String profileImageUrl;
 
-  const Contact(
+  Contact(
       {required this.id,
       required this.firstName,
       this.lastName,
@@ -19,6 +19,21 @@ class Contact {
       lastName: json['lastName'],
       phoneNumber: json['phoneNumber'],
       profileImageUrl: json['profileImageUrl'],
+    );
+  }
+
+  Contact copyWith({
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    String? profileImageUrl,
+  }) {
+    return Contact(
+      id: this.id,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
     );
   }
 }

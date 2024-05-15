@@ -135,7 +135,7 @@ class _ContactsState extends State<Contacts> {
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
-                borderSide: BorderSide.none, // Kenarlık yok
+                borderSide: BorderSide.none,
               ),
             ),
           ),
