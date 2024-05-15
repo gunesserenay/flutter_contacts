@@ -59,22 +59,28 @@ class _ContactsState extends State<Contacts> {
     }
   }
 
-  void _openAddNewContactOverlay() {
-    showModalBottomSheet(
+  Future<void> _openAddNewContactOverlay() async {
+    final result = await showModalBottomSheet<bool>(
         useSafeArea: true,
         isScrollControlled: true,
         context: context,
         builder: (ctx) => const AddNewContact());
+    if (result == true) {
+      _getContacts();
+    }
   }
 
-  void _selectContact(Contact contact) {
-    showModalBottomSheet(
+  Future<void> _selectContact(Contact contact) async {
+    final result = await showModalBottomSheet(
         useSafeArea: true,
         isScrollControlled: true,
         context: context,
         builder: (ctx) => ContactDetails(
               contact: contact,
             ));
+    if (result == true) {
+      _getContacts();
+    }
   }
 
   @override

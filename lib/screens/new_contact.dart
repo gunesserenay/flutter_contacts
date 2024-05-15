@@ -42,6 +42,7 @@ class _AddNewContactState extends State<AddNewContact> {
         final response = await http.post(url, headers: headers, body: body);
 
         if (response.statusCode == 200) {
+          Navigator.of(context).pop(true);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Contact added succesfully!')),
           );
@@ -159,7 +160,7 @@ class _AddNewContactState extends State<AddNewContact> {
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Phone number is required';
-                                } else if (!RegExp(r'^[0-9]+$')
+                                } else if (!RegExp(r'^\+?[0-9]+$')
                                     .hasMatch(value)) {
                                   return 'Phone number must be numeric';
                                 }
