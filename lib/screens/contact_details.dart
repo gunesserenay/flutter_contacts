@@ -1,11 +1,12 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/data/dummy_data.dart';
 import 'package:flutter_contacts/model/contact.dart';
 import 'package:flutter_contacts/widgets/new_contact_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class ContactDetails extends StatefulWidget {
   const ContactDetails({super.key, required this.contact});
@@ -20,6 +21,7 @@ class _ContactDetailsState extends State<ContactDetails> {
   bool _isDeleting = false;
   bool _isEditing = false;
   bool _isSaving = false;
+  File? _imageFile;
 
   String _firstName = '';
   String? _lastName;
@@ -42,6 +44,53 @@ class _ContactDetailsState extends State<ContactDetails> {
     _firstName = widget.contact.firstName;
     _lastName = widget.contact.lastName;
     _phoneNumber = widget.contact.phoneNumber;
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _showImageSourceActionSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        useSafeArea: true,
+        builder: (BuildContext context) {
+          return SafeArea(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.cancel),
+                title: const Text('Cancel'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ));
+        });
   }
 
   Future<void> _deleteContact() async {
@@ -86,11 +135,16 @@ class _ContactDetailsState extends State<ContactDetails> {
       setState(() {
         _isSaving = true;
       });
-
+      String? base64Image;
+      if (_imageFile != null) {
+        List<int> imageBytes = await _imageFile!.readAsBytes();
+        base64Image = base64Encode(imageBytes);
+      }
       final updatedContact = widget.contact.copyWith(
         firstName: _firstNameController.text,
         lastName: _lastNameController.text,
         phoneNumber: _phoneNumberController.text,
+        profileImageUrl: base64Image,
       );
 
       final url =
@@ -100,6 +154,7 @@ class _ContactDetailsState extends State<ContactDetails> {
         'ApiKey': '8d01e921-9d07-4a3e-a0f8-5dd6d2358259',
         'Content-Type': 'application/json',
       };
+
       final body = json.encode({
         'firstName': updatedContact.firstName,
         'lastName': updatedContact.lastName,
@@ -189,12 +244,17 @@ class _ContactDetailsState extends State<ContactDetails> {
             ),
             Column(
               children: [
-                const Icon(
-                  Icons.person,
-                  size: 200,
-                ),
+                _imageFile == null
+                    ? const Icon(
+                        Icons.person,
+                        size: 200,
+                      )
+                    : CircleAvatar(
+                        radius: 100,
+                        backgroundImage: FileImage(_imageFile!),
+                      ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => _showImageSourceActionSheet(context),
                   child: Text(
                     'Change Photo',
                     textAlign: TextAlign.start,

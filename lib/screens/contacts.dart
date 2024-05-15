@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/data/dummy_data.dart';
 import 'package:flutter_contacts/model/contact.dart';
 import 'package:flutter_contacts/screens/contact_details.dart';
 import 'package:flutter_contacts/screens/new_contact.dart';
@@ -99,6 +98,10 @@ class _ContactsState extends State<Contacts> {
         builder: (ctx) => ContactDetails(
               contact: contact,
             ));
+
+    if (result == true) {
+      _getContacts();
+    }
     if (result != null) {
       setState(() {
         int index = _contacts.indexWhere((x) => x.id == result.id);
@@ -107,9 +110,6 @@ class _ContactsState extends State<Contacts> {
         }
         _filterContacts();
       });
-    }
-    if (result == true) {
-      _getContacts();
     }
   }
 

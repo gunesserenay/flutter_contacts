@@ -3,7 +3,7 @@ class Contact {
   final String firstName;
   final String? lastName;
   final String phoneNumber;
-  final String profileImageUrl;
+  final String? profileImageUrl;
 
   Contact(
       {required this.id,
