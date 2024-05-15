@@ -280,18 +280,20 @@ class _ContactDetailsState extends State<ContactDetails> {
                       const Divider(
                         height: 30,
                       ),
-                      InkWell(
-                        onTap: _deleteContact,
-                        child: Text(
-                          'Delete contact',
-                          textAlign: TextAlign.start,
-                          style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
+                      _isDeleting
+                          ? const CircularProgressIndicator()
+                          : InkWell(
+                              onTap: _deleteContact,
+                              child: Text(
+                                'Delete contact',
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.nunito(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
                     ],
                   )
               ],

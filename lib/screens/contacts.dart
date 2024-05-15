@@ -18,13 +18,33 @@ class Contacts extends StatefulWidget {
 
 class _ContactsState extends State<Contacts> {
   List<Contact> _contacts = [];
+  List<Contact> _filteredContacts = [];
   bool _isLoading = true;
   String? _errorMessage;
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getContacts();
+    _searchController.addListener(_filterContacts);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_filterContacts);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterContacts() {
+    String query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredContacts = _contacts.where((contact) {
+        return contact.firstName.toLowerCase().contains(query) ||
+            contact.lastName?.toLowerCase().contains(query) == true;
+      }).toList();
+    });
   }
 
   Future<void> _getContacts() async {
@@ -43,6 +63,7 @@ class _ContactsState extends State<Contacts> {
             users.map((dynamic item) => Contact.fromJson(item)).toList();
         setState(() {
           _contacts = contacts;
+          _filteredContacts = contacts;
           _isLoading = false;
         });
       } else {
@@ -78,6 +99,15 @@ class _ContactsState extends State<Contacts> {
         builder: (ctx) => ContactDetails(
               contact: contact,
             ));
+    if (result != null) {
+      setState(() {
+        int index = _contacts.indexWhere((x) => x.id == result.id);
+        if (index != -1) {
+          _contacts[index] = result;
+        }
+        _filterContacts();
+      });
+    }
     if (result == true) {
       _getContacts();
     }
@@ -91,9 +121,9 @@ class _ContactsState extends State<Contacts> {
             ? Center(child: Text(_errorMessage!))
             : Expanded(
                 child: ListView.builder(
-                  itemCount: _contacts.length,
+                  itemCount: _filteredContacts.length,
                   itemBuilder: (context, index) => ContactItem(
-                    contact: _contacts[index],
+                    contact: _filteredContacts[index],
                     onSelectedContact: (contact) {
                       _selectContact(contact);
                     },
@@ -124,7 +154,7 @@ class _ContactsState extends State<Contacts> {
         padding: const EdgeInsets.all(20.0),
         child: Column(children: [
           TextField(
-            onChanged: (value) {},
+            controller: _searchController,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               hintText: 'Search by name',
