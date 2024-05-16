@@ -58,6 +58,9 @@ class _AddNewContactState extends State<AddNewContact> {
       final lastName = _lastNameController.text;
       final phoneNumber = _phoneNumberController.text;
 
+      setState(() {
+        _isSaving = true;
+      });
       String? imageUrl;
       if (_imageFile != null) {
         imageUrl = await _uploadImage(_imageFile!);
@@ -214,16 +217,18 @@ class _AddNewContactState extends State<AddNewContact> {
                     style: GoogleFonts.nunito(
                         fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  TextButton(
-                      onPressed: _saveContact,
-                      child: Text(
-                        'Done',
-                        style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: const Color(0xFFBABABA),
-                        ),
-                      )),
+                  _isSaving
+                      ? const CircularProgressIndicator()
+                      : TextButton(
+                          onPressed: _saveContact,
+                          child: Text(
+                            'Done',
+                            style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: const Color(0xFFBABABA),
+                            ),
+                          )),
                 ],
               ),
               Column(

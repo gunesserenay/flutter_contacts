@@ -3,15 +3,17 @@ import 'package:flutter_contacts/screens/new_contact.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NoContacts extends StatelessWidget {
-  const NoContacts({super.key});
+  const NoContacts({super.key, required this.addNewContact});
 
-  void _openAddNewContactOverlay(BuildContext context) {
-    showModalBottomSheet(
-        useSafeArea: true,
-        isScrollControlled: true,
-        context: context,
-        builder: (ctx) => const AddNewContact());
-  }
+  final void Function() addNewContact;
+
+  // void _openAddNewContactOverlay(BuildContext context) {
+  //   showModalBottomSheet(
+  //       useSafeArea: true,
+  //       isScrollControlled: true,
+  //       context: context,
+  //       builder: (ctx) => const AddNewContact());
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class NoContacts extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              _openAddNewContactOverlay(context);
+              addNewContact();
             },
             child: Text(
               'Create New Contact',

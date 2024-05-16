@@ -117,22 +117,22 @@ class _ContactsState extends State<Contacts> {
   Widget build(BuildContext context) {
     Widget content = _isLoading
         ? const Center(child: CircularProgressIndicator())
-        : _errorMessage != null
-            ? Center(child: Text(_errorMessage!))
-            : Expanded(
-                child: ListView.builder(
-                  itemCount: _filteredContacts.length,
-                  itemBuilder: (context, index) => ContactItem(
-                    contact: _filteredContacts[index],
-                    onSelectedContact: (contact) {
-                      _selectContact(contact);
-                    },
-                  ),
-                ),
-              );
+        : Expanded(
+            child: ListView.builder(
+              itemCount: _filteredContacts.length,
+              itemBuilder: (context, index) => ContactItem(
+                contact: _filteredContacts[index],
+                onSelectedContact: (contact) {
+                  _selectContact(contact);
+                },
+              ),
+            ),
+          );
 
     if (_contacts.isEmpty) {
-      content = const NoContacts();
+      content = NoContacts(
+        addNewContact: _openAddNewContactOverlay,
+      );
     }
     return Scaffold(
       backgroundColor: (const Color(0xFFF4F4F4)),
