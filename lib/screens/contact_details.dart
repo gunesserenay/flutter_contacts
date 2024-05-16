@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/model/contact.dart';
 import 'package:flutter_contacts/widgets/new_contact_text_field.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ContactDetails extends StatefulWidget {
   const ContactDetails({super.key, required this.contact});
@@ -53,6 +55,25 @@ class _ContactDetailsState extends State<ContactDetails> {
         _newImageFile = File(pickedFile.path);
         _isEditing = true;
       });
+    }
+  }
+
+  Future<File?> _compressImage(File file) async {
+    final directory = await getTemporaryDirectory();
+    final targetPath = '${directory.path}/temp.jpg';
+
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 50,
+      minWidth: 800,
+      minHeight: 800,
+    );
+
+    if (result != null) {
+      return File(result.path);
+    } else {
+      return null;
     }
   }
 
@@ -140,80 +161,95 @@ class _ContactDetailsState extends State<ContactDetails> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return SafeArea(
+        return DecoratedBox(
+            decoration: const BoxDecoration(
+                color: Color(0xFFF4F4F4),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25))),
             child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text('Delete Account?',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.nunito(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFFFF0000))),
-              const SizedBox(
-                height: 10,
-              ),
-              OutlinedButton(
-                style: ButtonStyle(
-                  side: const WidgetStatePropertyAll<BorderSide>(
-                      BorderSide(color: Color(0xFFBABABA))),
-                  backgroundColor:
-                      const WidgetStatePropertyAll<Color>(Color(0xFFF4F4F4)),
-                  padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
-                      EdgeInsets.all(10)),
-                  shape: WidgetStatePropertyAll<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                ),
-                onPressed: () {
-                  _deleteContact();
-                  Navigator.of(context).pop();
-                },
-                child: Text('Yes',
-                    style: GoogleFonts.nunito(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF000000))),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              OutlinedButton(
-                style: ButtonStyle(
-                  side: const WidgetStatePropertyAll<BorderSide>(
-                      BorderSide(color: Color(0xFFBABABA))),
-                  backgroundColor:
-                      const WidgetStatePropertyAll<Color>(Color(0xFFF4F4F4)),
-                  padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
-                      EdgeInsets.all(10)),
-                  shape: WidgetStatePropertyAll<OutlinedBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 25),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('Delete Account?',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFF0000))),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  OutlinedButton(
+                    style: ButtonStyle(
+                      side: const WidgetStatePropertyAll<BorderSide>(
+                          BorderSide(color: Color(0xFFBABABA))),
+                      backgroundColor: const WidgetStatePropertyAll<Color>(
+                          Color(0xFFF4F4F4)),
+                      padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+                          EdgeInsets.all(10)),
+                      shape: WidgetStatePropertyAll<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                    onPressed: () {
+                      _deleteContact();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Yes',
+                        style: GoogleFonts.nunito(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF000000))),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  OutlinedButton(
+                    style: ButtonStyle(
+                      side: const WidgetStatePropertyAll<BorderSide>(
+                          BorderSide(color: Color(0xFFBABABA))),
+                      backgroundColor: const WidgetStatePropertyAll<Color>(
+                          Color(0xFFF4F4F4)),
+                      padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+                          EdgeInsets.all(10)),
+                      shape: WidgetStatePropertyAll<OutlinedBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'No',
+                      style: GoogleFonts.nunito(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF000000)),
                     ),
                   ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'No',
-                  style: GoogleFonts.nunito(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF000000)),
-                ),
+                ],
               ),
-            ],
-          ),
-        ));
+            ));
       },
     );
   }
 
   Future<String?> _uploadImage(File imageFile) async {
+    final compressedImageFile = await _compressImage(imageFile);
+    if (compressedImageFile == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error compressing image')),
+        );
+      }
+      return null;
+    }
+
     final url = Uri.parse('http://146.59.52.68:11235/api/User/UploadImage');
     final headers = {
       'accept': 'application/json',
@@ -223,7 +259,8 @@ class _ContactDetailsState extends State<ContactDetails> {
     try {
       final request = http.MultipartRequest('POST', url)
         ..headers.addAll(headers)
-        ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+        ..files.add(await http.MultipartFile.fromPath(
+            'image', compressedImageFile.path));
 
       final response = await request.send();
 
