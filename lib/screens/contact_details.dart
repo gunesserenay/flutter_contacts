@@ -130,6 +130,83 @@ class _ContactDetailsState extends State<ContactDetails> {
     }
   }
 
+  void _showDeleteConfirmationPopup(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+            child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('Delete Account?',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.nunito(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red)),
+              const SizedBox(
+                height: 10,
+              ),
+              OutlinedButton(
+                style: ButtonStyle(
+                  side: const WidgetStatePropertyAll<BorderSide>(
+                      BorderSide(color: Color(0xFFBABABA))),
+                  backgroundColor:
+                      const WidgetStatePropertyAll<Color>(Color(0xFFF4F4F4)),
+                  padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+                      EdgeInsets.all(10)),
+                  shape: WidgetStatePropertyAll<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                ),
+                onPressed: () {
+                  _deleteContact();
+                  Navigator.of(context).pop();
+                },
+                child: Text('Yes',
+                    style: GoogleFonts.nunito(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              OutlinedButton(
+                style: ButtonStyle(
+                  side: const WidgetStatePropertyAll<BorderSide>(
+                      BorderSide(color: Color(0xFFBABABA))),
+                  backgroundColor:
+                      const WidgetStatePropertyAll<Color>(Color(0xFFF4F4F4)),
+                  padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
+                      EdgeInsets.all(10)),
+                  shape: WidgetStatePropertyAll<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'No',
+                  style: GoogleFonts.nunito(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        ));
+      },
+    );
+  }
+
   Future<String?> _uploadImage(File imageFile) async {
     final url = Uri.parse('http://146.59.52.68:11235/api/User/UploadImage');
     final headers = {
@@ -383,7 +460,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                       _isDeleting
                           ? const CircularProgressIndicator()
                           : InkWell(
-                              onTap: _deleteContact,
+                              onTap: () =>
+                                  _showDeleteConfirmationPopup(context),
                               child: Text(
                                 'Delete contact',
                                 textAlign: TextAlign.start,
