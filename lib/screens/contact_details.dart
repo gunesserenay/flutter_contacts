@@ -108,25 +108,31 @@ class _ContactDetailsState extends State<ContactDetails> {
       final response = await http.delete(url, headers: headers);
 
       if (response.statusCode == 200) {
-        Navigator.of(context).pop(true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Account deleted!')),
-        );
+        if (mounted) {
+          Navigator.of(context).pop(true);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Account deleted!')),
+          );
+        }
       } else {
         setState(() {
           _isDeleting = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${response.statusCode}')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${response.statusCode}')),
+          );
+        }
       }
     } catch (e) {
       setState(() {
         _isDeleting = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
 
@@ -243,9 +249,11 @@ class _ContactDetailsState extends State<ContactDetails> {
       if (_newImageFile != null) {
         imageUrl = await _uploadImage(_newImageFile!);
         if (imageUrl == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error uploading image')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Error uploading image')),
+            );
+          }
           setState(() {
             _isSaving = false;
           });
@@ -289,17 +297,21 @@ class _ContactDetailsState extends State<ContactDetails> {
           setState(() {
             _isSaving = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${response.statusCode}')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${response.statusCode}')),
+            );
+          }
         }
       } catch (e) {
         setState(() {
           _isSaving = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: $e')),
+          );
+        }
       }
     }
   }

@@ -65,9 +65,12 @@ class _AddNewContactState extends State<AddNewContact> {
       if (_imageFile != null) {
         imageUrl = await _uploadImage(_imageFile!);
         if (imageUrl == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error uploading image')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Error uploading image')),
+            );
+          }
+
           setState(() {
             _isSaving = false;
           });
@@ -92,19 +95,31 @@ class _AddNewContactState extends State<AddNewContact> {
         final response = await http.post(url, headers: headers, body: body);
 
         if (response.statusCode == 200) {
-          Navigator.of(context).pop(true);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Contact added succesfully!')),
-          );
+          if (mounted) {
+            Navigator.of(context).pop(true);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Contact added succesfully!')),
+            );
+          }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${response.statusCode}')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${response.statusCode}')),
+            );
+          }
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: $e')),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isSaving = false;
+          });
+        }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
