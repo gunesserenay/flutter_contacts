@@ -63,7 +63,7 @@ class _AddNewContactState extends State<AddNewContact> {
         imageUrl = await _uploadImage(_imageFile!);
         if (imageUrl == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error uploading image')),
+            const SnackBar(content: Text('Error uploading image')),
           );
           setState(() {
             _isSaving = false;
@@ -114,7 +114,7 @@ class _AddNewContactState extends State<AddNewContact> {
     final pickedFile = await ImagePicker().pickImage(source: source);
 
     if (pickedFile != null) {
-      File file = File(pickedFile.path); // XFile'i File'a dönüştürme
+      File file = File(pickedFile.path);
       File? compressedFile = await _compressImage(file);
       setState(() {
         _imageFile = compressedFile;
@@ -135,7 +135,7 @@ class _AddNewContactState extends State<AddNewContact> {
     );
 
     if (result != null) {
-      return File(result.path); // XFile'i File'a dönüştürme
+      return File(result.path);
     } else {
       return null;
     }

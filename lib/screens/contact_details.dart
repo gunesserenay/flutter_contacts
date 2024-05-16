@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/data/dummy_data.dart';
 import 'package:flutter_contacts/model/contact.dart';
 import 'package:flutter_contacts/widgets/new_contact_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +20,7 @@ class _ContactDetailsState extends State<ContactDetails> {
   bool _isDeleting = false;
   bool _isEditing = false;
   bool _isSaving = false;
-  File? _imageFile;
+  File? _newImageFile;
 
   String _firstName = '';
   String? _lastName;
@@ -51,7 +50,8 @@ class _ContactDetailsState extends State<ContactDetails> {
 
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile.path);
+        _newImageFile = File(pickedFile.path);
+        _isEditing = true;
       });
     }
   }
@@ -130,21 +130,56 @@ class _ContactDetailsState extends State<ContactDetails> {
     }
   }
 
+  Future<String?> _uploadImage(File imageFile) async {
+    final url = Uri.parse('http://146.59.52.68:11235/api/User/UploadImage');
+    final headers = {
+      'accept': 'application/json',
+      'ApiKey': '8d01e921-9d07-4a3e-a0f8-5dd6d2358259',
+    };
+
+    try {
+      final request = http.MultipartRequest('POST', url)
+        ..headers.addAll(headers)
+        ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final decodedResponse = jsonDecode(responseBody);
+        return decodedResponse['data']['imageUrl'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
   Future<void> _updateContact() async {
     if (_formkey.currentState!.validate()) {
       setState(() {
         _isSaving = true;
       });
-      String? base64Image;
-      if (_imageFile != null) {
-        List<int> imageBytes = await _imageFile!.readAsBytes();
-        base64Image = base64Encode(imageBytes);
+      String? imageUrl;
+      if (_newImageFile != null) {
+        imageUrl = await _uploadImage(_newImageFile!);
+        if (imageUrl == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error uploading image')),
+          );
+          setState(() {
+            _isSaving = false;
+          });
+          return;
+        }
       }
       final updatedContact = widget.contact.copyWith(
         firstName: _firstNameController.text,
         lastName: _lastNameController.text,
         phoneNumber: _phoneNumberController.text,
-        profileImageUrl: base64Image,
+        profileImageUrl: imageUrl,
       );
 
       final url =
@@ -194,6 +229,54 @@ class _ContactDetailsState extends State<ContactDetails> {
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider<Object>? backgroundImage;
+    if (_newImageFile != null) {
+      backgroundImage = FileImage(_newImageFile!);
+    } else if (widget.contact.profileImageUrl != null) {
+      backgroundImage = NetworkImage(widget.contact.profileImageUrl!);
+    }
+    Widget editContent = Form(
+        key: _formkey,
+        child: Column(
+          children: [
+            NewContactTextField(
+              hint: 'First name',
+              validator: (value) {
+                if (value == null ||
+                    value.isEmpty ||
+                    value.trim().length <= 1 ||
+                    value.trim().length > 50) {
+                  return 'Must be between 1 and 50 characters';
+                }
+                return null;
+              },
+              controller: _firstNameController,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            NewContactTextField(
+              hint: 'Last name',
+              controller: _lastNameController,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            NewContactTextField(
+              hint: 'Phone',
+              keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Phone number is required';
+                } else if (!RegExp(r'^\+?[0-9]+$').hasMatch(value)) {
+                  return 'Phone number must be numeric';
+                }
+                return null;
+              },
+              controller: _phoneNumberController,
+            ),
+          ],
+        ));
     return SizedBox(
       height: double.infinity,
       child: Padding(
@@ -244,15 +327,14 @@ class _ContactDetailsState extends State<ContactDetails> {
             ),
             Column(
               children: [
-                _imageFile == null
-                    ? const Icon(
-                        Icons.person,
-                        size: 200,
-                      )
-                    : CircleAvatar(
-                        radius: 100,
-                        backgroundImage: FileImage(_imageFile!),
-                      ),
+                CircleAvatar(
+                  radius: 100,
+                  backgroundImage: backgroundImage,
+                  child: (_newImageFile == null &&
+                          widget.contact.profileImageUrl == null)
+                      ? const Icon(Icons.person, size: 200)
+                      : null,
+                ),
                 TextButton(
                   onPressed: () => _showImageSourceActionSheet(context),
                   child: Text(
@@ -266,49 +348,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                   ),
                 ),
                 if (_isEditing)
-                  Form(
-                      key: _formkey,
-                      child: Column(
-                        children: [
-                          NewContactTextField(
-                            hint: 'First name',
-                            validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value.trim().length <= 1 ||
-                                  value.trim().length > 50) {
-                                return 'Must be between 1 and 50 characters';
-                              }
-                              return null;
-                            },
-                            controller: _firstNameController,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          NewContactTextField(
-                            hint: 'Last name',
-                            controller: _lastNameController,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          NewContactTextField(
-                            hint: 'Phone',
-                            keyboardType: TextInputType.phone,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Phone number is required';
-                              } else if (!RegExp(r'^\+?[0-9]+$')
-                                  .hasMatch(value)) {
-                                return 'Phone number must be numeric';
-                              }
-                              return null;
-                            },
-                            controller: _phoneNumberController,
-                          ),
-                        ],
-                      ))
+                  editContent
                 else
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

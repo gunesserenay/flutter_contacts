@@ -21,9 +21,13 @@ class ContactItem extends StatelessWidget {
             onSelectedContact(contact);
           },
           child: ListTile(
-            leading: const Icon(
-              Icons.face,
-              size: 34,
+            leading: CircleAvatar(
+              backgroundImage: contact.profileImageUrl != null
+                  ? NetworkImage(contact.profileImageUrl!)
+                  : null,
+              child: contact.profileImageUrl == null
+                  ? const Icon(Icons.person)
+                  : null,
             ),
             title: Text(
               '${contact.firstName} ${contact.lastName}',
