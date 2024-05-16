@@ -392,18 +392,20 @@ class _ContactDetailsState extends State<ContactDetails> {
                         });
                       }
                     },
-                    child: Text(
-                      !_isEditing ? 'Edit' : 'Done',
-                      style: !_isEditing
-                          ? GoogleFonts.nunito(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: const Color(0xFF0075FF))
-                          : GoogleFonts.nunito(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: const Color(0xFFBABABA)),
-                    ),
+                    child: _isSaving
+                        ? const CircularProgressIndicator()
+                        : Text(
+                            !_isEditing ? 'Edit' : 'Done',
+                            style: !_isEditing
+                                ? GoogleFonts.nunito(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: const Color(0xFF0075FF))
+                                : GoogleFonts.nunito(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: const Color(0xFFBABABA)),
+                          ),
                   ),
                 ],
               ),

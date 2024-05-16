@@ -158,7 +158,12 @@ class _ContactsState extends State<Contacts> {
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               hintText: 'Search by name',
+              hintStyle: GoogleFonts.nunito(
+                  fontSize: 16,
+                  color: const Color(0xFFBABABA),
+                  fontWeight: FontWeight.bold),
               prefixIcon: const Icon(Icons.search),
+              prefixIconColor: const Color(0xFFBABABA),
               filled: true,
               fillColor: const Color(0xFFFFFFFF),
               contentPadding:
