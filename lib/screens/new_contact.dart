@@ -26,6 +26,15 @@ class _AddNewContactState extends State<AddNewContact> {
   final TextEditingController _phoneNumberController = TextEditingController();
 
   Future<String?> _uploadImage(File imageFile) async {
+    final compressedImageFile = await _compressImage(imageFile);
+    if (compressedImageFile == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error compressing image')),
+        );
+      }
+      return null;
+    }
     final url = Uri.parse('http://146.59.52.68:11235/api/User/UploadImage');
     final headers = {
       'accept': 'application/json',
@@ -35,7 +44,8 @@ class _AddNewContactState extends State<AddNewContact> {
     try {
       final request = http.MultipartRequest('POST', url)
         ..headers.addAll(headers)
-        ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+        ..files.add(await http.MultipartFile.fromPath(
+            'image', compressedImageFile.path));
 
       final response = await request.send();
 
@@ -138,9 +148,9 @@ class _AddNewContactState extends State<AddNewContact> {
 
     if (pickedFile != null) {
       File file = File(pickedFile.path);
-      File? compressedFile = await _compressImage(file);
+
       setState(() {
-        _imageFile = compressedFile;
+        _imageFile = file;
       });
     }
   }
