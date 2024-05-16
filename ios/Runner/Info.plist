@@ -51,6 +51,12 @@
     <string>We need to access your photo library</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>We need to save photos to your photo library</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+	</dict>
+
 
 </dict>
 </plist>
