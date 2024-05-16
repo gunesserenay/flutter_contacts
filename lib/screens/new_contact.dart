@@ -47,7 +47,12 @@ class _AddNewContactState extends State<AddNewContact> {
         return null;
       }
     } catch (e) {
-      print('Error uploading image: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error uploading image')),
+        );
+      }
+
       return null;
     }
   }

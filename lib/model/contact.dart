@@ -29,7 +29,7 @@ class Contact {
     String? profileImageUrl,
   }) {
     return Contact(
-      id: this.id,
+      id: id,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       phoneNumber: phoneNumber ?? this.phoneNumber,

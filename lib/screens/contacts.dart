@@ -19,8 +19,7 @@ class _ContactsState extends State<Contacts> {
   List<Contact> _contacts = [];
   List<Contact> _filteredContacts = [];
   bool _isLoading = true;
-  String? _errorMessage;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -68,14 +67,22 @@ class _ContactsState extends State<Contacts> {
       } else {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Failed to load contacts: ${response.statusCode}';
         });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to load contacts')),
+          );
+        }
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Failed to load contacts: $e';
       });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load contacts')),
+        );
+      }
     }
   }
 

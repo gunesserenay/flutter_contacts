@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/screens/new_contact.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NoContacts extends StatelessWidget {
   const NoContacts({super.key, required this.addNewContact});
 
   final void Function() addNewContact;
-
-  // void _openAddNewContactOverlay(BuildContext context) {
-  //   showModalBottomSheet(
-  //       useSafeArea: true,
-  //       isScrollControlled: true,
-  //       context: context,
-  //       builder: (ctx) => const AddNewContact());
-  // }
 
   @override
   Widget build(BuildContext context) {
