@@ -180,123 +180,124 @@ class _AddNewContactState extends State<AddNewContact> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        return SizedBox(
-          height: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Cancel',
-                        textAlign: TextAlign.start,
-                        style: GoogleFonts.nunito(
-                          fontSize: 16,
-                          color: Colors.blue,
-                        ),
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+          color: Color(0xFFF4F4F4),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+      child: SizedBox(
+        height: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Cancel',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        color: const Color(0xFF0075FF),
                       ),
                     ),
-                    Text(
-                      'New Contact',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.nunito(
-                          fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    TextButton(
+                  ),
+                  Text(
+                    'New Contact',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.nunito(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  TextButton(
                       onPressed: _saveContact,
                       child: Text(
                         'Done',
                         style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.grey),
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    _imageFile == null
-                        ? const Icon(
-                            Icons.person,
-                            size: 200,
-                          )
-                        : CircleAvatar(
-                            radius: 100,
-                            backgroundImage: FileImage(_imageFile!),
-                          ),
-                    TextButton(
-                      onPressed: () => _showImageSourceActionSheet(context),
-                      child: Text(
-                        'Add Photo',
-                        textAlign: TextAlign.start,
-                        style: GoogleFonts.nunito(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
-                          color: Colors.black,
+                          color: const Color(0xFFBABABA),
                         ),
+                      )),
+                ],
+              ),
+              Column(
+                children: [
+                  _imageFile == null
+                      ? const Icon(
+                          Icons.person,
+                          size: 200,
+                        )
+                      : CircleAvatar(
+                          radius: 100,
+                          backgroundImage: FileImage(_imageFile!),
+                        ),
+                  TextButton(
+                    onPressed: () => _showImageSourceActionSheet(context),
+                    child: Text(
+                      'Add Photo',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.nunito(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: const Color(0xFF000000),
                       ),
                     ),
-                    Form(
-                        key: _formkey,
-                        child: Column(
-                          children: [
-                            NewContactTextField(
-                              hint: 'First name',
-                              validator: (value) {
-                                if (value == null ||
-                                    value.isEmpty ||
-                                    value.trim().length <= 1 ||
-                                    value.trim().length > 50) {
-                                  return 'Must be between 1 and 50 characters';
-                                }
-                                return null;
-                              },
-                              controller: _firstNameController,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            NewContactTextField(
-                              hint: 'Last name',
-                              controller: _lastNameController,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            NewContactTextField(
-                              hint: 'Phone',
-                              keyboardType: TextInputType.phone,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Phone number is required';
-                                } else if (!RegExp(r'^\+?[0-9]+$')
-                                    .hasMatch(value)) {
-                                  return 'Phone number must be numeric';
-                                }
-                                return null;
-                              },
-                              controller: _phoneNumberController,
-                            ),
-                          ],
-                        ))
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  Form(
+                      key: _formkey,
+                      child: Column(
+                        children: [
+                          NewContactTextField(
+                            hint: 'First name',
+                            validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.trim().length <= 1 ||
+                                  value.trim().length > 50) {
+                                return 'Must be between 1 and 50 characters';
+                              }
+                              return null;
+                            },
+                            controller: _firstNameController,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          NewContactTextField(
+                            hint: 'Last name',
+                            controller: _lastNameController,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          NewContactTextField(
+                            hint: 'Phone',
+                            keyboardType: TextInputType.phone,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Phone number is required';
+                              } else if (!RegExp(r'^\+?[0-9]+$')
+                                  .hasMatch(value)) {
+                                return 'Phone number must be numeric';
+                              }
+                              return null;
+                            },
+                            controller: _phoneNumberController,
+                          ),
+                        ],
+                      ))
+                ],
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

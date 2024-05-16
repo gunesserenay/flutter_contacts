@@ -29,7 +29,7 @@ class NoContacts extends StatelessWidget {
                 GoogleFonts.nunito(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           Text(
-            'Contacts you’ve added will appear here.',
+            'Contacts you\'ve added will appear here.',
             style:
                 GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold),
           ),
@@ -41,7 +41,7 @@ class NoContacts extends StatelessWidget {
               'Create New Contact',
               textAlign: TextAlign.start,
               style: GoogleFonts.nunito(
-                  color: Colors.blue,
+                  color: const Color(0xFF0075FF),
                   fontSize: 16,
                   fontWeight: FontWeight.bold),
             ),

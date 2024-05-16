@@ -14,7 +14,7 @@ class ContactItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Card(
-        color: Colors.white,
+        color: const Color(0xFFFFFFFF),
         elevation: 0,
         child: InkWell(
           onTap: () {
@@ -33,14 +33,14 @@ class ContactItem extends StatelessWidget {
               '${contact.firstName} ${contact.lastName}',
               style: GoogleFonts.nunito(
                   fontSize: 16,
-                  color: Colors.black,
+                  color: const Color(0xFF000000),
                   fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
               contact.phoneNumber,
               style: GoogleFonts.nunito(
                   fontSize: 16,
-                  color: Colors.grey,
+                  color: const Color(0xFFBABABA),
                   fontWeight: FontWeight.bold),
             ),
           ),

@@ -135,7 +135,7 @@ class _ContactsState extends State<Contacts> {
       content = const NoContacts();
     }
     return Scaffold(
-      backgroundColor: (const Color.fromARGB(255, 244, 244, 244)),
+      backgroundColor: (const Color(0xFFF4F4F4)),
       appBar: AppBar(
         actions: [
           IconButton(
@@ -143,7 +143,7 @@ class _ContactsState extends State<Contacts> {
             icon: const Icon(Icons.add),
           )
         ],
-        backgroundColor: (const Color.fromARGB(255, 244, 244, 244)),
+        backgroundColor: (const Color(0xFFF4F4F4)),
         centerTitle: false,
         title: Text(
           'Contacts',
@@ -160,7 +160,7 @@ class _ContactsState extends State<Contacts> {
               hintText: 'Search by name',
               prefixIcon: const Icon(Icons.search),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: const Color(0xFFFFFFFF),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               border: OutlineInputBorder(

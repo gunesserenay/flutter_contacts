@@ -146,7 +146,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                   style: GoogleFonts.nunito(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red)),
+                      color: const Color(0xFFFF0000))),
               const SizedBox(
                 height: 10,
               ),
@@ -170,7 +170,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                     style: GoogleFonts.nunito(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black)),
+                        color: const Color(0xFF000000))),
               ),
               const SizedBox(
                 height: 10,
@@ -197,7 +197,7 @@ class _ContactDetailsState extends State<ContactDetails> {
                   style: GoogleFonts.nunito(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                      color: const Color(0xFF000000)),
                 ),
               ),
             ],
@@ -354,129 +354,135 @@ class _ContactDetailsState extends State<ContactDetails> {
             ),
           ],
         ));
-    return SizedBox(
-      height: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: Text(
-                    'Cancel',
-                    textAlign: TextAlign.start,
-                    style: GoogleFonts.nunito(
-                      fontSize: 16,
-                      color: Colors.blue,
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+          color: Color(0xFFF4F4F4),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+      child: SizedBox(
+        height: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    child: Text(
+                      'Cancel',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        color: const Color(0xFF0075FF),
+                      ),
                     ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (_isEditing) {
-                      _updateContact();
-                    } else {
-                      setState(() {
-                        _isEditing = true;
-                      });
-                    }
-                  },
-                  child: Text(
-                    !_isEditing ? 'Edit' : 'Done',
-                    style: !_isEditing
-                        ? GoogleFonts.nunito(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.blue)
-                        : GoogleFonts.nunito(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.grey),
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                CircleAvatar(
-                  radius: 100,
-                  backgroundImage: backgroundImage,
-                  child: (_newImageFile == null &&
-                          widget.contact.profileImageUrl == null)
-                      ? const Icon(Icons.person, size: 200)
-                      : null,
-                ),
-                TextButton(
-                  onPressed: () => _showImageSourceActionSheet(context),
-                  child: Text(
-                    'Change Photo',
-                    textAlign: TextAlign.start,
-                    style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.black,
+                  TextButton(
+                    onPressed: () {
+                      if (_isEditing) {
+                        _updateContact();
+                      } else {
+                        setState(() {
+                          _isEditing = true;
+                        });
+                      }
+                    },
+                    child: Text(
+                      !_isEditing ? 'Edit' : 'Done',
+                      style: !_isEditing
+                          ? GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: const Color(0xFF0075FF))
+                          : GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: const Color(0xFFBABABA)),
                     ),
                   ),
-                ),
-                if (_isEditing)
-                  editContent
-                else
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _firstName,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                ],
+              ),
+              Column(
+                children: [
+                  CircleAvatar(
+                    radius: 100,
+                    backgroundImage: backgroundImage,
+                    child: (_newImageFile == null &&
+                            widget.contact.profileImageUrl == null)
+                        ? const Icon(Icons.person, size: 200)
+                        : null,
+                  ),
+                  TextButton(
+                    onPressed: () => _showImageSourceActionSheet(context),
+                    child: Text(
+                      'Change Photo',
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.nunito(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: const Color(0xFF000000),
                       ),
-                      const Divider(
-                        height: 30,
-                      ),
-                      Text(
-                        _lastName!,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const Divider(
-                        height: 30,
-                      ),
-                      Text(
-                        _phoneNumber,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const Divider(
-                        height: 30,
-                      ),
-                      _isDeleting
-                          ? const CircularProgressIndicator()
-                          : InkWell(
-                              onTap: () =>
-                                  _showDeleteConfirmationPopup(context),
-                              child: Text(
-                                'Delete contact',
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.nunito(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.red,
+                    ),
+                  ),
+                  if (_isEditing)
+                    editContent
+                  else
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _firstName,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const Divider(
+                          height: 30,
+                        ),
+                        Text(
+                          _lastName!,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const Divider(
+                          height: 30,
+                        ),
+                        Text(
+                          _phoneNumber,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const Divider(
+                          height: 30,
+                        ),
+                        _isDeleting
+                            ? const CircularProgressIndicator()
+                            : InkWell(
+                                onTap: () =>
+                                    _showDeleteConfirmationPopup(context),
+                                child: Text(
+                                  'Delete contact',
+                                  textAlign: TextAlign.start,
+                                  style: GoogleFonts.nunito(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: const Color(0xFFFF0000),
+                                  ),
                                 ),
                               ),
-                            ),
-                    ],
-                  )
-              ],
-            ),
-          ],
+                      ],
+                    )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
